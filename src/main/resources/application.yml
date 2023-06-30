@@ -1,0 +1,43 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+    username: sa
+    password: sa
+    driver-class-name: org.h2.Driver
+    tomcat:
+      connection-properties: "spring.jpa.properties.hibernate.connection.characterEncoding=UTF-8"
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.H2Dialect
+        connection:
+          characterEncoding: UTF-8
+        format_sql: true
+
+
+  # # Dados de conexão com o banco MySQL
+  # datasource:
+  #   url: sql10.freesqldatabase.com:3306/sql10629297
+  #   username: sql10629297
+  #   password: HlAmG2k1ux
+  #   driver-class-name: com.mysql.cj.jdbc.Driver
+  # jpa:
+  #   hibernate:
+  #     ddl-auto: create-drop
+  #   show-sql: true
+  #   properties:
+  #     hibernate:
+  #       format_sql: true
+  #   database: mysql
+  #   database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+
+application:
+  security:
+    jwt:
+      secret-key: 404E635266556A586E3272357538782F413F4428472B4B6250645367566B5970
+      expiration: 86400000 # a day
+      refresh-token:
+        expiration: 604800000 # 7 days
