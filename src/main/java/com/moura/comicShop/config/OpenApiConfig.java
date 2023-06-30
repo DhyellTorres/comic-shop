@@ -11,10 +11,10 @@ import io.swagger.v3.oas.annotations.security.SecurityScheme;
 import io.swagger.v3.oas.annotations.servers.Server;
 
 @OpenAPIDefinition(info = @Info(contact = @Contact(name = "Adryel Torres", email = "torresadryel@gmail.com", url = "https://www.instagram.com/dhyelltorres/"), description = "API Desafio Técnico Processo Seletivo SQUAD DIGITAL", title = "comic-shop SQUAD DIGITAL - Adryel Torres", version = "1.0", license = @License(name = "Licence name", url = "https://some-url.com"), termsOfService = "Terms of service"), servers = {
-                @Server(description = "Local ENV", url = "http://localhost:8080"),
-                @Server(description = "PROD ENV", url = "https://github.com/DhyellTorres")
+    @Server(description = "Local ENV", url = "http://localhost:8080"),
+    @Server(description = "PROD ENV", url = "https://cosmic-shop.netlify.app")
 }, security = {
-                @SecurityRequirement(name = "bearerAuth")
+    @SecurityRequirement(name = "bearerAuth")
 })
 @SecurityScheme(name = "bearerAuth", description = "JWT auth description", scheme = "bearer", type = SecuritySchemeType.HTTP, bearerFormat = "JWT", in = SecuritySchemeIn.HEADER)
 public class OpenApiConfig {
