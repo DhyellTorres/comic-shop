@@ -11,7 +11,7 @@ public interface CouponRepository extends JpaRepository<Coupon, Long> {
 
   List<Coupon> findByDiscountContainingIgnoreCase(String discount);
 
-  List<Coupon> findByExpirationDateContainingIgnoreCase(String expirationDate);
+  List<Coupon> findByExpirationDateContaining(String expirationDate);
 
   Optional<Coupon> findByCode(String code);
 
