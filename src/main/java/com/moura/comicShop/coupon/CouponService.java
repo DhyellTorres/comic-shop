@@ -1,7 +1,5 @@
 package com.moura.comicShop.coupon;
 
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,31 +8,66 @@ public class CouponService {
   @Autowired
   private CouponRepository couponRepository;
 
-  public Coupon createCoupon(CouponDTO couponDTO) {
+  public CouponResponse createCoupon(CouponDTO couponDTO) {
     Coupon coupon = new Coupon(couponDTO.discount(), couponDTO.days());
-    return couponRepository.save(coupon);
+    return CouponResponse.builder()
+        .message("Coupon created successfully")
+        .coupon(couponRepository.save(coupon))
+        .build();
   }
 
-  public Coupon getCouponById(Long id) {
-    return couponRepository.findById(id).orElseThrow();
-  }
-
-  public Coupon updateCoupon(Long id, CouponDTO couponDTO) {
+  public CouponResponse getCouponById(Long id) {
+    String message = "Coupon found";
     Coupon coupon = couponRepository.findById(id).orElseThrow();
-    coupon.setDiscount(couponDTO.discount());
-    coupon.setExpirationDate(couponDTO.days());
-    return couponRepository.save(coupon);
+    if (coupon == null) {
+      message = "Coupon not found";
+    }
+    return CouponResponse.builder()
+        .message(message)
+        .coupon(coupon)
+        .build();
   }
 
-  public void deleteCoupon(Long id) {
-    couponRepository.deleteById(id);
+  public CouponResponse updateCoupon(Long id, CouponDTO couponDTO) {
+    String message = "Coupon updated successfully";
+    Coupon coupon = null;
+    if (couponRepository.findById(id).orElseThrow() == null) {
+      message = "Coupon not found";
+    } else {
+      coupon = couponRepository.findById(id).orElseThrow();
+      coupon.setDiscount(couponDTO.discount());
+      coupon.setExpirationDate(couponDTO.days());
+      couponRepository.save(coupon);
+    }
+    return CouponResponse.builder()
+        .message(message)
+        .coupon(coupon)
+        .build();
   }
 
-  public List<Coupon> listAllCoupons() {
-    return couponRepository.findAll();
+  public CouponResponse deleteCoupon(Long id) {
+    String message = "Coupon not found";
+    if (couponRepository.existsById(id)) {
+      message = "Coupon deleted successfully";
+      couponRepository.deleteById(id);
+    }
+    return CouponResponse.builder()
+        .message(message)
+        .build();
   }
 
-  public List<Coupon> getCouponByCode(String code) {
-    return couponRepository.findByCodeContainingIgnoreCase(code);
+  public CouponResponseList listAllCoupons() {
+    return CouponResponseList.builder()
+        .message("Coupons found")
+        .coupons(couponRepository.findAll())
+        .build();
+  }
+
+  public CouponResponse getCouponByCode(String code) {
+    Coupon coupon = couponRepository.findById(couponRepository.findByCode(code).orElseThrow().getId()).orElseThrow();
+    return CouponResponse.builder()
+        .message("Coupons found")
+        .coupon(coupon)
+        .build();
   }
 }
