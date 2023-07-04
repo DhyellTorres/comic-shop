@@ -71,6 +71,12 @@ public class SecurityConfiguration {
         .requestMatchers(PUT, "/api/v1/coupon/**").hasAuthority(ADMIN_UPDATE.name())
         .requestMatchers(DELETE, "/api/v1/coupon/**").hasAuthority(ADMIN_DELETE.name())
 
+        .requestMatchers("/api/v1/shopping/**").hasAnyRole(ADMIN.name(), MANAGER.name())
+        .requestMatchers(GET, "/api/v1/shopping/**").hasAnyAuthority(ADMIN_READ.name(), MANAGER_READ.name())
+        .requestMatchers(POST, "/api/v1/shopping/**").hasAnyAuthority(ADMIN_CREATE.name(), MANAGER_CREATE.name())
+        .requestMatchers(PUT, "/api/v1/shopping/**").hasAnyAuthority(ADMIN_UPDATE.name(), MANAGER_UPDATE.name())
+        .requestMatchers(DELETE, "/api/v1/shopping/**").hasAnyAuthority(ADMIN_DELETE.name(), MANAGER_DELETE.name())
+
         .anyRequest()
         .authenticated()
         .and()
