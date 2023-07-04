@@ -28,6 +28,11 @@ public class AuthenticationService {
   private final AuthenticationManager authenticationManager;
 
   public AuthenticationResponse register(RegisterRequest request) {
+    if (emailExists(request.getEmail()))
+      return AuthenticationResponse.builder()
+          .accessToken("Email already exists")
+          .refreshToken(null)
+          .build();
     var user = User.builder()
         .firstname(request.getFirstname())
         .lastname(request.getLastname())
@@ -60,6 +65,10 @@ public class AuthenticationService {
         .accessToken(jwtToken)
         .refreshToken(refreshToken)
         .build();
+  }
+
+  private boolean emailExists(String email) {
+    return repository.existsById(repository.findByEmail(email).orElseThrow().getId());
   }
 
   private void saveUserToken(User user, String jwtToken) {

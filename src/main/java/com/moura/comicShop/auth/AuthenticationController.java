@@ -21,7 +21,11 @@ public class AuthenticationController {
   @PostMapping("/register")
   public ResponseEntity<AuthenticationResponse> register(
       @RequestBody RegisterRequest request) {
-    return ResponseEntity.ok(service.register(request));
+    AuthenticationResponse ar = service.register(request);
+    if (ar.getAccessToken().equals("Email already exists")) {
+      return ResponseEntity.badRequest().body(ar);
+    }
+    return ResponseEntity.ok(ar);
   }
 
   @PostMapping("/authenticate")
