@@ -15,6 +15,6 @@ import lombok.NoArgsConstructor;
 public class CouponResponseList {
   @JsonProperty("message")
   private String message;
-  @JsonProperty("shopping")
+  @JsonProperty("coupons")
   private List<Coupon> coupons;
 }

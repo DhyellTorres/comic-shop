@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 public class CouponResponse {
   @JsonProperty("message")
   private String message;
-  @JsonProperty("shopping")
+  @JsonProperty("coupon")
   private Coupon coupon;
 }

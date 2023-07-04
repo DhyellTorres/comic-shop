@@ -68,7 +68,7 @@ public class AuthenticationService {
   }
 
   private boolean emailExists(String email) {
-    return repository.existsById(repository.findByEmail(email).orElseThrow().getId());
+    return repository.findByEmail(email).isPresent();
   }
 
   private void saveUserToken(User user, String jwtToken) {
