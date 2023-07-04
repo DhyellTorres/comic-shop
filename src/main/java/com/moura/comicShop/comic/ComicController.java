@@ -1,10 +1,9 @@
 package com.moura.comicShop.comic;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/comics")
@@ -15,45 +14,45 @@ public class ComicController {
 
   @PostMapping
   @PreAuthorize("hasAuthority('admin:create')")
-  public Comic createComic(@RequestBody Comic comic) {
-    return comicService.createComic(comic);
+  public ResponseEntity<ComicResponse> createComic(@RequestBody Comic comic) {
+    return ResponseEntity.ok().body(comicService.createComic(comic));
   }
 
   @PutMapping("/{id}")
   @PreAuthorize("hasAuthority('admin:update')")
-  public Comic updateComic(@PathVariable Long id, @RequestBody Comic comic) {
+  public ResponseEntity<ComicResponse> updateComic(@PathVariable Long id, @RequestBody Comic comic) {
     comic.setId(id);
-    return comicService.updateComic(comic);
+    return ResponseEntity.ok().body(comicService.updateComic(comic));
   }
 
   @DeleteMapping("/{id}")
   @PreAuthorize("hasAuthority('admin:delete')")
-  public void deleteComicById(@PathVariable Long id) {
-    comicService.deleteComicById(id);
+  public ResponseEntity<ComicResponse> deleteComicById(@PathVariable Long id) {
+    return ResponseEntity.ok().body(comicService.deleteComicById(id));
   }
 
   @GetMapping
-  public List<Comic> listAllComics() {
-    return comicService.listAllComics();
+  public ResponseEntity<ComicResponseList> listAllComics() {
+    return ResponseEntity.ok().body(comicService.listAllComics());
   }
 
   @GetMapping("/{id}")
-  public Comic getComicById(@PathVariable Long id) {
-    return comicService.searchComicById(id);
+  public ResponseEntity<ComicResponse> getComicById(@PathVariable Long id) {
+    return ResponseEntity.ok().body(comicService.searchComicById(id));
   }
 
   @GetMapping("/search")
-  public List<Comic> searchComicsByTitle(@RequestParam("title") String title) {
-    return comicService.searchComicByTitle(title);
+  public ResponseEntity<ComicResponseList> searchComicsByTitle(@RequestParam("title") String title) {
+    return ResponseEntity.ok().body(comicService.searchComicByTitle(title));
   }
 
   @GetMapping("/searchByCreator")
-  public List<Comic> searchComicsByCreator(@RequestParam("creator") String creator) {
-    return comicService.searchComicByCreator(creator);
+  public ResponseEntity<ComicResponseList> searchComicsByCreator(@RequestParam("creator") String creator) {
+    return ResponseEntity.ok().body(comicService.searchComicByCreator(creator));
   }
 
   @GetMapping("/page/{page}")
-  public List<Comic> listComicsByPage(@PathVariable int page) {
-    return comicService.listAllComicsByPage(page);
+  public ResponseEntity<ComicResponseList> listComicsByPage(@PathVariable int page) {
+    return ResponseEntity.ok().body(comicService.listAllComicsByPage(page));
   }
 }
