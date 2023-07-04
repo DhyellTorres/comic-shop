@@ -24,57 +24,77 @@ public class ShoppingController {
 
   @PostMapping
   @PreAuthorize("hasAuthority('management:create')")
-  public ResponseEntity<?> createShopping(@RequestBody ShoppingDTO shoppingDTO) {
-    return shoppingService.createShopping(shoppingDTO);
+  public ResponseEntity<ShoppingResponse> createShopping(@RequestBody ShoppingDTO shoppingDTO) {
+    ShoppingResponse sr = shoppingService.createShopping(shoppingDTO);
+    if (sr.getMessage().equals("Shopping created successfully")) {
+      return ResponseEntity.ok().body(sr);
+    } else {
+      return ResponseEntity.badRequest().body(sr);
+    }
   }
 
   @PostMapping("/coupon")
   @PreAuthorize("hasAuthority('management:create')")
-  public ResponseEntity<?> createShoppingCoupon(@RequestBody ShoppingCouponDTO shoppingCouponDTO) {
-    return shoppingService.createShoppingCoupon(shoppingCouponDTO);
+  public ResponseEntity<ShoppingResponse> createShoppingCoupon(@RequestBody ShoppingCouponDTO shoppingCouponDTO) {
+    ShoppingResponse sr = shoppingService.createShoppingCoupon(shoppingCouponDTO);
+    if (sr.getMessage().equals("Shopping created successfully")) {
+      return ResponseEntity.ok().body(sr);
+    } else {
+      return ResponseEntity.badRequest().body(sr);
+    }
   }
 
   @PutMapping("/{id}")
   @PreAuthorize("hasAuthority('management:update')")
-  public ResponseEntity<?> updateShopping(@PathVariable Long id, @RequestBody ShoppingDTO shoppingDTO) {
-    return shoppingService.updateShopping(id, shoppingDTO);
+  public ResponseEntity<ShoppingResponse> updateShopping(@PathVariable Long id, @RequestBody ShoppingDTO shoppingDTO) {
+    ShoppingResponse sr = shoppingService.updateShopping(id, shoppingDTO);
+    if (sr.getMessage().equals("Shopping created successfully")) {
+      return ResponseEntity.ok().body(sr);
+    } else {
+      return ResponseEntity.badRequest().body(sr);
+    }
   }
 
   @DeleteMapping("/{id}")
   @PreAuthorize("hasAuthority('management:delete')")
-  public ResponseEntity<?> deleteShopping(@PathVariable Long id) {
-    return shoppingService.deleteShopping(id);
+  public ResponseEntity<ShoppingResponse> deleteShopping(@PathVariable Long id) {
+    ShoppingResponse sr = shoppingService.deleteShopping(id);
+    if (sr.getMessage().equals("Shopping created successfully")) {
+      return ResponseEntity.ok().body(sr);
+    } else {
+      return ResponseEntity.badRequest().body(sr);
+    }
   }
 
   @GetMapping
   @PreAuthorize("hasAuthority('admin:read')")
-  public ResponseEntity<?> listAllShopping() {
-    return shoppingService.listAllShopping();
+  public ResponseEntity<ShoppingResponseList> listAllShopping() {
+    return ResponseEntity.ok().body(shoppingService.listAllShopping());
   }
 
   @GetMapping("/user/{user_email}")
   @PreAuthorize("hasAuthority('management:read')")
-  public ResponseEntity<?> getShoppingByEmail(@PathVariable String user_email) {
-    return shoppingService.getShoppingByEmail(user_email);
+  public ResponseEntity<ShoppingResponseList> getShoppingByEmail(@PathVariable String user_email) {
+    return ResponseEntity.ok().body(shoppingService.getShoppingByEmail(user_email));
   }
 
   @GetMapping("/comic/{comic_id}")
   @PreAuthorize("hasAuthority('admin:read')")
-  public ResponseEntity<?> getShoppingByComicId(@PathVariable Comic comic_id) {
-    return shoppingService.getShoppingByComicId(comic_id);
+  public ResponseEntity<ShoppingResponseList> getShoppingByComicId(@PathVariable Comic comic_id) {
+    return ResponseEntity.ok().body(shoppingService.getShoppingByComicId(comic_id));
   }
 
   @GetMapping("/coupon/{coupon_id}")
   @PreAuthorize("hasAuthority('admin:read')")
-  public ResponseEntity<?> getShoppingByCouponId(@PathVariable Coupon coupon_id) {
-    return shoppingService.getShoppingByCouponId(coupon_id);
+  public ResponseEntity<ShoppingResponseList> getShoppingByCouponId(@PathVariable Coupon coupon_id) {
+    return ResponseEntity.ok().body(shoppingService.getShoppingByCouponId(coupon_id));
   }
 
   @GetMapping("/user/{user_email}/coupon/{coupon_id}")
   @PreAuthorize("hasAuthority('admin:read')")
-  public ResponseEntity<?> getShoppingByEmailAndCouponId(@PathVariable String user_email,
+  public ResponseEntity<ShoppingResponseList> getShoppingByEmailAndCouponId(@PathVariable String user_email,
       @PathVariable Coupon coupon_id) {
-    return shoppingService.getShoppingByEmailAndCoupon(user_email, coupon_id);
+    return ResponseEntity.ok().body(shoppingService.getShoppingByEmailAndCoupon(user_email, coupon_id));
   }
 
 }

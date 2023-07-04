@@ -4,7 +4,6 @@ import java.util.Calendar;
 import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.moura.comicShop.comic.Comic;
@@ -23,24 +22,33 @@ public class ShoppingService {
   @Autowired
   private ComicRepository comicRepository;
 
-  public ResponseEntity<?> createShopping(ShoppingDTO shoppingDTO) {
+  public ShoppingResponse createShopping(ShoppingDTO shoppingDTO) {
+    String message = "Comic not found";
+    Shopping shoppings = null;
     if (comicRepository.existsById(shoppingDTO.comic_id())) {
       if (shoppingDTO.quantity() > 0) {
         if (shoppingDTO.user_email() != null) {
           Shopping shopping = new Shopping(comicRepository.findById(shoppingDTO.comic_id()).orElseThrow(),
               shoppingDTO.user_email(), shoppingDTO.quantity());
-          shoppingRepository.save(shopping);
-          return ResponseEntity.ok().body("Shopping created successfully");
+          shoppings = shoppingRepository.save(shopping);
+          message = "Shopping created successfully";
+        } else {
+          message = "User email is required";
         }
-        return ResponseEntity.badRequest().body("User email is required");
+      } else {
+        message = "Quantity must be greater than 0";
       }
-      return ResponseEntity.badRequest().body("Quantity must be greater than 0");
     }
-    return ResponseEntity.badRequest().body("Comic not found");
+    return ShoppingResponse.builder()
+        .message(message)
+        .shopping(shoppings)
+        .build();
   }
 
-  public ResponseEntity<?> createShoppingCoupon(ShoppingCouponDTO shoppingCouponDTO) {
+  public ShoppingResponse createShoppingCoupon(ShoppingCouponDTO shoppingCouponDTO) {
     TimeZone timeZone = TimeZone.getTimeZone("America/Sao_Paulo");
+    String message = "Comic not found";
+    Shopping shoppings = null;
     if (comicRepository.existsById(shoppingCouponDTO.shoppingDTO().comic_id())) {
       if (shoppingCouponDTO.shoppingDTO().quantity() > 0) {
         if (shoppingCouponDTO.shoppingDTO().user_email() != null) {
@@ -53,28 +61,43 @@ public class ShoppingService {
                   shoppingCouponDTO.shoppingDTO().user_email(),
                   shoppingCouponDTO.shoppingDTO().quantity(),
                   couponRepository.findByCode(shoppingCouponDTO.coupon_code()).orElseThrow());
-              shoppingRepository.save(shopping);
-              return ResponseEntity.ok().body("Shopping created successfully");
+              shoppings = shoppingRepository.save(shopping);
+              message = "Shopping created successfully";
+            } else {
+              message = "Coupon expired";
             }
-            return ResponseEntity.badRequest().body("Coupon expired");
+          } else {
+            message = "Coupon not found";
           }
-          return ResponseEntity.badRequest().body("Coupon not found");
+        } else {
+          message = "User email is required";
         }
-        return ResponseEntity.badRequest().body("User email is required");
+      } else {
+        message = "Quantity must be greater than 0";
       }
-      return ResponseEntity.badRequest().body("Quantity must be greater than 0");
     }
-    return ResponseEntity.badRequest().body("Comic not found");
+    return ShoppingResponse.builder()
+        .message(message)
+        .shopping(shoppings)
+        .build();
   }
 
-  public ResponseEntity<?> getShoppingById(Long id) {
+  public ShoppingResponse getShoppingById(Long id) {
+    String message = "Shopping not found";
+    Shopping shoppings = null;
     if (shoppingRepository.existsById(id)) {
-      return ResponseEntity.ok().body(shoppingRepository.findById(id).orElseThrow());
+      message = "Shopping found successfully";
+      shoppings = shoppingRepository.findById(id).orElseThrow();
     }
-    return ResponseEntity.badRequest().body("Shopping not found");
+    return ShoppingResponse.builder()
+        .message(message)
+        .shopping(shoppings)
+        .build();
   }
 
-  public ResponseEntity<?> updateShopping(Long id, ShoppingDTO shoppingDTO) {
+  public ShoppingResponse updateShopping(Long id, ShoppingDTO shoppingDTO) {
+    String message = "Shopping not found";
+    Shopping shoppings = null;
     if (shoppingRepository.existsById(id)) {
       if (comicRepository.existsById(shoppingDTO.comic_id())) {
         if (id.equals(shoppingDTO.comic_id())) {
@@ -82,41 +105,61 @@ public class ShoppingService {
           shopping.setComic(comicRepository.findById(shoppingDTO.comic_id()).orElseThrow());
           shopping.setEmail(shoppingDTO.user_email());
           shopping.setQuantity(shoppingDTO.quantity());
-          shoppingRepository.save(shopping);
-          return ResponseEntity.ok().body("Shopping updated successfully");
+          shoppings = shoppingRepository.save(shopping);
+          message = "Shopping updated successfully";
+        } else {
+          message = "Id must be the same as the comic id";
         }
-        return ResponseEntity.badRequest().body("Id must be the same as the comic id");
+      } else {
+        message = "Comic not found";
       }
-      return ResponseEntity.badRequest().body("Comic not found");
     }
-    return ResponseEntity.badRequest().body("Shopping not found");
+    return ShoppingResponse.builder()
+        .message(message)
+        .shopping(shoppings)
+        .build();
   }
 
-  public ResponseEntity<?> deleteShopping(Long id) {
+  public ShoppingResponse deleteShopping(Long id) {
+    String message = "Shopping not found";
+    Shopping shoppings = null;
     if (shoppingRepository.existsById(id)) {
       shoppingRepository.deleteById(id);
-      return ResponseEntity.ok().body("Shopping deleted successfully");
+      message = "Shopping deleted successfully";
     }
-    return ResponseEntity.badRequest().body("Shopping not found");
+    return ShoppingResponse.builder()
+        .message(message)
+        .shopping(shoppings)
+        .build();
   }
 
-  public ResponseEntity<?> listAllShopping() {
-    return ResponseEntity.ok().body(shoppingRepository.findAll());
+  public ShoppingResponseList listAllShopping() {
+    return ShoppingResponseList.builder()
+        .shoppings(shoppingRepository.findAll())
+        .build();
   }
 
-  public ResponseEntity<?> getShoppingByEmail(String email) {
-    return ResponseEntity.ok().body(shoppingRepository.findByEmailContainingIgnoreCase(email));
+  public ShoppingResponseList getShoppingByEmail(String email) {
+    return ShoppingResponseList.builder()
+        .shoppings(shoppingRepository.findByEmailContainingIgnoreCase(email))
+        .build();
   }
 
-  public ResponseEntity<?> getShoppingByComicId(Comic comic) {
-    return ResponseEntity.ok().body(shoppingRepository.findByComic_id(comic));
+  public ShoppingResponseList getShoppingByComicId(Comic comic) {
+    return ShoppingResponseList.builder()
+        .shoppings(shoppingRepository.findByComic_id(comic))
+        .build();
   }
 
-  public ResponseEntity<?> getShoppingByCouponId(Coupon coupon) {
-    return ResponseEntity.ok().body(shoppingRepository.findByCoupon_id(coupon));
+  public ShoppingResponseList getShoppingByCouponId(Coupon coupon) {
+    return ShoppingResponseList.builder()
+        .shoppings(shoppingRepository.findByCoupon_id(coupon))
+        .build();
   }
 
-  public ResponseEntity<?> getShoppingByEmailAndCoupon(String email, Coupon coupon) {
-    return ResponseEntity.ok().body(shoppingRepository.findByEmailContainingIgnoreCaseAndCoupon_id(email, coupon));
+  public ShoppingResponseList getShoppingByEmailAndCoupon(String email, Coupon coupon) {
+    return ShoppingResponseList.builder()
+        .shoppings(shoppingRepository.findByEmailContainingIgnoreCaseAndCoupon_id(email, coupon))
+        .build();
   }
 }
