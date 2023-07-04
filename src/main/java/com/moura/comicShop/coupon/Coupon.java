@@ -57,7 +57,8 @@ public class Coupon {
   }
 
   private Calendar expirationDate(int days) {
-    Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+    TimeZone timeZone = TimeZone.getTimeZone("America/Sao_Paulo");
+    Calendar calendar = Calendar.getInstance(timeZone);
     calendar.add(Calendar.DATE, days);
     return calendar;
   }
