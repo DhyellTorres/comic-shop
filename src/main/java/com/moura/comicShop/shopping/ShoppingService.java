@@ -6,9 +6,7 @@ import java.util.TimeZone;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.moura.comicShop.comic.Comic;
 import com.moura.comicShop.comic.ComicRepository;
-import com.moura.comicShop.coupon.Coupon;
 import com.moura.comicShop.coupon.CouponRepository;
 
 @Service
@@ -145,21 +143,46 @@ public class ShoppingService {
         .build();
   }
 
-  public ShoppingResponseList getShoppingByComicId(Comic comic) {
-    return ShoppingResponseList.builder()
-        .shoppings(shoppingRepository.findByComic_id(comic))
-        .build();
+  public ShoppingResponseList getShoppingByComicId(long comic) {
+    if (comicRepository.existsById(comic)) {
+      return ShoppingResponseList.builder()
+          .shoppings(shoppingRepository.findByComic_id(comicRepository.findById(comic).orElseThrow()))
+          .build();
+    } else {
+      return ShoppingResponseList.builder()
+          .shoppings(null)
+          .build();
+    }
   }
 
-  public ShoppingResponseList getShoppingByCouponId(Coupon coupon) {
-    return ShoppingResponseList.builder()
-        .shoppings(shoppingRepository.findByCoupon_id(coupon))
-        .build();
+  public ShoppingResponseList getShoppingByCouponId(long coupon) {
+    if (couponRepository.existsById(coupon)) {
+      return ShoppingResponseList.builder()
+          .shoppings(shoppingRepository.findByCoupon_id(couponRepository.findById(coupon).orElseThrow()))
+          .build();
+    } else {
+      return ShoppingResponseList.builder()
+          .shoppings(null)
+          .build();
+    }
   }
 
-  public ShoppingResponseList getShoppingByEmailAndCoupon(String email, Coupon coupon) {
-    return ShoppingResponseList.builder()
-        .shoppings(shoppingRepository.findByEmailContainingIgnoreCaseAndCoupon_id(email, coupon))
-        .build();
+  public ShoppingResponseList getShoppingByEmailAndCoupon(String email, long coupon) {
+    if (couponRepository.existsById(coupon)) {
+      if (shoppingRepository.findByEmailContainingIgnoreCase(email).size() > 0) {
+        return ShoppingResponseList.builder()
+            .shoppings(shoppingRepository.findByEmailContainingIgnoreCaseAndCoupon_id(email,
+                couponRepository.findById(coupon).orElseThrow()))
+            .build();
+      } else {
+        return ShoppingResponseList.builder()
+            .shoppings(null)
+            .build();
+      }
+    } else {
+      return ShoppingResponseList.builder()
+          .shoppings(null)
+          .build();
+    }
   }
 }

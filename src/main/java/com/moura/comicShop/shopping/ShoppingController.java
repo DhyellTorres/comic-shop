@@ -12,9 +12,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.moura.comicShop.comic.Comic;
-import com.moura.comicShop.coupon.Coupon;
-
 @RestController
 @RequestMapping("/api/v1/shoppings")
 @PreAuthorize("hasAnyRole('MANAGER','ADMIN')")
@@ -80,20 +77,20 @@ public class ShoppingController {
 
   @GetMapping("/comic/{comic_id}")
   @PreAuthorize("hasAuthority('admin:read')")
-  public ResponseEntity<ShoppingResponseList> getShoppingByComicId(@PathVariable Comic comic_id) {
+  public ResponseEntity<ShoppingResponseList> getShoppingByComicId(@PathVariable long comic_id) {
     return ResponseEntity.ok().body(shoppingService.getShoppingByComicId(comic_id));
   }
 
   @GetMapping("/coupon/{coupon_id}")
   @PreAuthorize("hasAuthority('admin:read')")
-  public ResponseEntity<ShoppingResponseList> getShoppingByCouponId(@PathVariable Coupon coupon_id) {
+  public ResponseEntity<ShoppingResponseList> getShoppingByCouponId(@PathVariable long coupon_id) {
     return ResponseEntity.ok().body(shoppingService.getShoppingByCouponId(coupon_id));
   }
 
   @GetMapping("/user/{user_email}/coupon/{coupon_id}")
   @PreAuthorize("hasAuthority('admin:read')")
   public ResponseEntity<ShoppingResponseList> getShoppingByEmailAndCouponId(@PathVariable String user_email,
-      @PathVariable Coupon coupon_id) {
+      @PathVariable long coupon_id) {
     return ResponseEntity.ok().body(shoppingService.getShoppingByEmailAndCoupon(user_email, coupon_id));
   }
 
