@@ -86,7 +86,12 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
-
+	<distributionManagement>
+		<repository>
+			<id>repository-id</id>
+			<url>http://example.com/repository</url>
+		</repository>
+	</distributionManagement>
 	<build>
 		<plugins>
 			<plugin>
