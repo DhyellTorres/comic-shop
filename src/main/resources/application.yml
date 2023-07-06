@@ -18,21 +18,22 @@ spring:
         format_sql: true
 
 
-  # # Dados de conexão com o banco MySQL
+  # Dados de conexão com o banco de dados PostgreSQL
+  
   # datasource:
-  #   url: sql10.freesqldatabase.com:3306/sql10629297
-  #   username: sql10629297
-  #   password: HlAmG2k1ux
-  #   driver-class-name: com.mysql.cj.jdbc.Driver
+  #   url: jdbc:postgresql://comic-shop-api-db-1101/comic-shop?socketFactory=com.google.cloud.sql.postgres.SocketFactory&cloudSqlInstance=comic-shop-api-db-1101&user=D-Admin&password=pcZl0`rK}_(Zk)nX
+  #   username: D-Admin
+  #   password: pcZl0`rK}_(Zk)nX
+  #   driver-class-name: org.postgresql.Driver
   # jpa:
   #   hibernate:
   #     ddl-auto: create-drop
-  #   show-sql: true
+  #   show-sql: false
   #   properties:
   #     hibernate:
   #       format_sql: true
-  #   database: mysql
-  #   database-platform: org.hibernate.dialect.MySQL5InnoDBDialect
+  #   database: postgresql
+  #   database-platform: org.hibernate.dialect.PostgreSQLDialect
 
 application:
   security:
